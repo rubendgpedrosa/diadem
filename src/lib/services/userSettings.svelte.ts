@@ -114,7 +114,7 @@ function defaultActionState(): ActionState {
 
 export function getDefaultUserSettings(): UserSettings {
 	const general = getConfig().general;
-	const defaultMapStyle = getDefaultMapStyle();
+	const defaultMapStyle = getConfig().mapStyles.find((style) => style.id === "voyager") ?? getDefaultMapStyle("dark");
 
 	return {
 		mapPosition: {
@@ -136,15 +136,22 @@ export function getDefaultUserSettings(): UserSettings {
 			tappable: getDefaultIconSet(MapObjectType.TAPPABLE)
 		},
 		isLeftHanded: false,
-		themeMode: "system",
+		themeMode: "dark",
 		loadMapObjectsWhileMoving: false,
 		loadMapObjectsPadding: 20,
 		showDebugMenu: false,
 		enableRotatePitch: true,
-		mapIconSize: 1,
+		mapIconSize: 1.25,
 		externalMapProvider: ExternalMapProvider.GOOGLE,
 		filters: {
-			pokemon: { category: "pokemon", ...defaultFilter() },
+			pokemon: {
+                category: "pokemon", enabled: true,
+                filters: [{
+                    id: "pogoleiria-all-pokemon", enabled: true,
+                    title: { message: "pokemon", title: "Todos os Pokémon" },
+                    icon: { isUserSelected: false }
+                }]
+            },
 			pokestop: getDefaultPokestopFilter(),
 			gym: getDefaultGymFilter(),
 			station: getDefaultStationFilter(),

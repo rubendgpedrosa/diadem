@@ -51,3 +51,9 @@ CLAUDE.md
 
 # VSCode
 .vscode
+
+# Local branding; exclude deployment secrets and backups
+.env
+docker-compose.yml
+branding-backup
+!config/custom.css

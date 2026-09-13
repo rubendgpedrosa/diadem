@@ -13,7 +13,7 @@
 			(function () {
 				try {
 					var s = JSON.parse(localStorage.getItem("userSettings") || "{}");
-					var mode = s && s.themeMode;
+					var mode = (s && s.themeMode) || "dark";
 					var dark =
 						mode === "dark" ||
 						((!mode || mode === "system") &&
@@ -38,7 +38,7 @@
 			}
 
 			html.dark {
-				background: oklch(0.145 0 0);
+				background: oklch(0.105 0.022 258);
 			}
 
 			#initial-loader {
@@ -48,25 +48,28 @@
 				display: flex;
 				align-items: center;
 				justify-content: center;
+                flex-direction: column;
+                gap: 16px;
 				background: inherit;
 			}
 
 			#initial-loader img {
-				display: none;
+				display: block;
 				width: 88px;
 				height: 88px;
-				border-radius: calc(infinity * 1px);
+				border-radius: 20px;
 			}
 
 			html.native-app #initial-loader img {
 				display: block;
 			}
-		</style>
+		#initial-loader::after { content: "PoGoLeiria"; color: oklch(0.52 0.17 28); font: 700 20px/1.4 system-ui, sans-serif; letter-spacing: -0.035em; }
+        </style>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<div id="initial-loader">
-			<img src="%sveltekit.assets%/loader.svg" alt="Loading" />
+			<img src="%sveltekit.assets%/loader.svg" alt="PoGoLeiria" />
 		</div>
 		<div style="display: contents; height: 100%">%sveltekit.body%</div>
 	</body>

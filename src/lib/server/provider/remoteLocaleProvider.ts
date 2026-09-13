@@ -21,7 +21,9 @@ export class RemoteLocaleProvider extends BulkDataProvider<Locales, RemoteLocale
 	protected async querySingle(locale: Locales): Promise<[Locales, RemoteLocale]> {
 		let targetLocale: string = locale;
 		if (locale === "pt") {
-			targetLocale = "pt-br";
+			// PoGo Leiria: game text (Pokémon, forms, types, weather, items,
+			// moves, quest titles) stays in English, as local players call it.
+			targetLocale = "en";
 		}
 
 		const rawData = await this.fetchData(

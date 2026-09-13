@@ -1,7 +1,7 @@
 <script lang="ts">
 	import "../app.css";
 	import { getUserSettings } from "@/lib/services/userSettings.svelte";
-	import { ModeWatcher } from "mode-watcher";
+	import { ModeWatcher, setMode } from "mode-watcher";
 	import Metadata from "@/components/utils/Metadata.svelte";
 	import StatusScreen from "@/components/ui/StatusScreen.svelte";
 	import InstanceGate from "@/components/ui/InstanceGate.svelte";
@@ -13,7 +13,12 @@
 	let { children, data } = $props();
 
 	// remove static loader
-	onMount(() => document.getElementById("initial-loader")?.remove());
+	onMount(() => {
+        document.getElementById("initial-loader")?.remove();
+        if (!data?.needsInstanceGate && !data?.configError) {
+            setMode(getUserSettings().themeMode ?? "dark");
+        }
+    });
 </script>
 
 {#if data?.needsInstanceGate}

@@ -54,3 +54,6 @@ docker-compose.yml
 
 # F-Droid repo cloned locally
 /fdroiddata
+
+# Local backups of the gitignored config and of pre-branch patches.
+branding-backup/
