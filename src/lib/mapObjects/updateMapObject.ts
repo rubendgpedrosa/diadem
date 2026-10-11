@@ -1,3 +1,4 @@
+import { isMapActive } from "@/lib/map/mapActivity";
 import { getActiveSearch } from "@/lib/features/activeSearch.svelte.js";
 import type { AnyFilter, FilterS2Cell } from "@/lib/features/filters/filters";
 import { deleteAllFeaturesOfType, updateFeatures } from "@/lib/map/featuresGen.svelte";
@@ -359,6 +360,7 @@ export async function updateMapObject(
 }
 
 export async function updateAllMapObjects(removeOld: boolean = true, onlyChanged: boolean = false) {
+	if (!isMapActive()) return;
 	if (onlyChanged && currentController) return;
 
 	currentController?.abort();

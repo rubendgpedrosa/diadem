@@ -3,10 +3,12 @@ import { updateAllMapObjects } from "@/lib/mapObjects/updateMapObject";
 import { getUserSettings } from "@/lib/services/userSettings.svelte.js";
 
 export let loadMapObjectInterval: undefined | NodeJS.Timeout;
+import { isMapActive } from "@/lib/map/mapActivity";
+
 let isLoadMapObjectsRunning: boolean = false;
 
 async function runLoadMapObjects() {
-	if (isLoadMapObjectsRunning) return;
+	if (!isMapActive() || isLoadMapObjectsRunning) return;
 	try {
 		isLoadMapObjectsRunning = true;
 		await updateAllMapObjects(false);
@@ -18,7 +20,7 @@ async function runLoadMapObjects() {
 
 export function resetLoadMapObjects() {
 	clearLoadMapObjectsInterval();
-	if (getUserSettings().loadMapObjectsWhileMoving) {
+	if (isMapActive() && getUserSettings().loadMapObjectsWhileMoving) {
 		loadMapObjectInterval = setInterval(runLoadMapObjects, AGGRESSIVE_UPDATE_TIME);
 	}
 }
