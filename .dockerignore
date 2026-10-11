@@ -57,3 +57,6 @@ CLAUDE.md
 docker-compose.yml
 branding-backup
 !config/custom.css
+
+# setup.sh links the runtime config here on the host; build from the example.
+src/lib/server/config.toml

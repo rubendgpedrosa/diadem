@@ -51,6 +51,10 @@ async function loadingWrapper<T>(func: Promise<T>, loadedFeature: LoadedFeature)
 }
 
 export async function load() {
+	const supportedFeatures = loadingWrapper(
+		updateSupportedFeatures(),
+		LoadedFeature.SUPPORTED_FEATURES
+	);
 	const userDetails = loadingWrapper(updateUserDetails(), LoadedFeature.USER_DETAILS);
 	const serverUserSettings = (async () => {
 		await userDetails;
@@ -63,8 +67,11 @@ export async function load() {
 	await Promise.all([
 		loadingWrapper(initAllIconSets(), LoadedFeature.ICON_SETS),
 		loadingWrapper(loadMasterFile(), LoadedFeature.MASTER_FILE),
-		loadingWrapper(loadKojiGeofences(), LoadedFeature.KOJI),
-		loadingWrapper(updateSupportedFeatures(), LoadedFeature.SUPPORTED_FEATURES),
+		loadingWrapper(
+			supportedFeatures.then(() => loadKojiGeofences()),
+			LoadedFeature.KOJI
+		),
+		supportedFeatures,
 		loadingWrapper(loadMasterStats(), LoadedFeature.MASTER_STATS),
 		userDetails,
 		serverUserSettings,

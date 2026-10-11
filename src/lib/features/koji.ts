@@ -1,4 +1,5 @@
 import type { Feature, Polygon } from "geojson";
+import { isSupportedFeature } from "@/lib/services/supportedFeatures";
 import { getHeaders, parseResponse } from "@/lib/utils/requests";
 
 export type KojiReference = {
@@ -20,10 +21,13 @@ export type KojiFeatures = KojiFeature[];
 let geofences: KojiFeatures = [];
 
 export async function loadKojiGeofences() {
+	if (!isSupportedFeature("koji")) {
+		geofences = [];
+		return;
+	}
 	const result = await fetch("/api/koji", { headers: getHeaders() });
 
 	if (!result.ok) {
-		// this also errors when koji is disabled by admin, but checking isSupportedFeature would race on initial loading
 		console.error("Error while fetching geofences");
 		return;
 	}
