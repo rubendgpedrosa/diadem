@@ -483,5 +483,8 @@
 	"language_polish": "Polski",
 	"yesterday_time_lower": "wczoraj, {time}",
 	"today_time_lower": "dziś, {time}",
-	"tomorrow_time_lower": "jutro, {time}"
+	"tomorrow_time_lower": "jutro, {time}",
+	"lure_place": "Postaw moduł wabik",
+	"lure_place_done": "Moduł wabik w kolejce",
+	"lure_place_failed": "Nie udało się postawić modułu wabika ({code})"
 }

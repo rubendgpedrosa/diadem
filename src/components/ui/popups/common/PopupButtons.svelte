@@ -3,11 +3,14 @@
 	import type { MapData } from "@/lib/mapObjects/mapObjectTypes";
 	import { ClientMapObjectType } from "@/lib/mapObjects/mapObjectTypes";
 	import { getPrimaryPopupActions } from "@/lib/ui/primaryPopupActions";
+	import { ensureLureAccess } from "@/lib/lure/lureAccess.svelte";
 	import { getPopupActions } from "@/lib/ui/popupActions";
 	import { isMenuSidebar } from "@/lib/utils/device";
 
 	let { lat, lon, data }: { lat: number; lon: number; data: MapData } = $props();
 	const actions = $derived(getPrimaryPopupActions(data, lat, lon));
+	// One capability call per page load; the action row reacts when it lands.
+	$effect(() => ensureLureAccess());
 	const type = $derived(data.type === ClientMapObjectType.LOCATION ? undefined : data.type);
 </script>
 

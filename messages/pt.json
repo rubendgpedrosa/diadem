@@ -217,5 +217,8 @@
 	"language_spanish": "Espanhol",
 	"yesterday_time_lower": "ontem, {time}",
 	"today_time_lower": "hoje, {time}",
-	"tomorrow_time_lower": "amanhã, {time}"
+	"tomorrow_time_lower": "amanhã, {time}",
+	"lure_place": "Colocar módulo isca",
+	"lure_place_done": "Módulo isca na fila",
+	"lure_place_failed": "Não foi possível colocar o módulo isca ({code})"
 }

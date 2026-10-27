@@ -4,6 +4,7 @@ import {
 	CircleOff,
 	Eye,
 	EyeClosed,
+	Flower,
 	Focus,
 	Navigation,
 	Scan,
@@ -32,6 +33,12 @@ import {
 	togglePopupAction
 } from "@/lib/ui/popupActions";
 import type { QuickAction } from "@/lib/ui/quickActions.svelte";
+import { openQuickActions } from "@/lib/ui/quickActions.svelte";
+import { openToast } from "@/lib/ui/toasts.svelte.js";
+import { mItem } from "@/lib/services/ingameLocale";
+import { getLureAccess } from "@/lib/lure/lureAccess.svelte";
+import { placeLure } from "@/lib/lure/lureApi";
+import type { PokestopData } from "@/lib/types/mapObjectData/pokestop";
 
 export type PrimaryPopupAction = QuickAction & { popupAction?: PopupAction };
 
@@ -76,6 +83,36 @@ export function getPrimaryPopupActions(
 			}
 		});
 	}
+	/**
+	 * Placing a lure is a moderator action on a stop, so the button exists only
+	 * when the shell says this session may use it. The menu lists the lure items
+	 * the way the popup already draws them; the shell decides again on submit.
+	 */
+	if (data.type === MapObjectType.POKESTOP) {
+		const access = getLureAccess();
+		if (access?.canPlace) {
+			actions.push({
+				label: m.lure_place(),
+				Icon: Flower,
+				onclick: (event?: Event) => {
+					const trigger = event?.currentTarget instanceof HTMLElement ? event.currentTarget : null;
+					const rect = trigger?.getBoundingClientRect();
+					openQuickActions({
+						x: rect ? rect.left : window.innerWidth / 2,
+						y: rect ? rect.bottom + 4 : window.innerHeight / 2,
+						title: m.lure_place(),
+						trigger: trigger ?? undefined,
+						getActions: () =>
+							access.lureTypes.map((lureType) => ({
+								label: mItem(lureType),
+								Icon: Flower,
+								onclick: () => void placeLureAt(data, lureType)
+							}))
+					});
+				}
+			});
+		}
+	}
 	for (const action of [PopupAction.DIMMED, PopupAction.RADIUS, PopupAction.TIMER] as const) {
 		if (!supportsPopupAction(type, action)) continue;
 		const active = isPopupActionActive(type, data.mapId, action);
@@ -100,4 +137,15 @@ export function getPrimaryPopupActions(
 		});
 	}
 	return actions;
+}
+
+/** One job per lure; a repeat is reported as a repeat, never queued again here. */
+async function placeLureAt(stop: PokestopData, lureType: number): Promise<void> {
+	const result = await placeLure({
+		pokestopId: stop.id,
+		lat: stop.lat,
+		lon: stop.lon,
+		lureType
+	});
+	openToast(result.ok ? m.lure_place_done() : m.lure_place_failed({ code: result.error }));
 }
