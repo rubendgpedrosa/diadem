@@ -20,7 +20,7 @@ export async function fetchLureCapability(
 	fetchImpl: typeof fetch = fetch
 ): Promise<LureCapability> {
 	try {
-		const response = await fetchImpl("/lure/capability", {
+		const response = await fetchImpl("/pokedex/lure/capability", {
 			credentials: "same-origin",
 			headers: { Accept: "application/json" },
 			cache: "no-store"
@@ -52,7 +52,7 @@ export async function placeLure(
 ): Promise<LurePlacement> {
 	let response: Response;
 	try {
-		response = await fetchImpl("/lure", {
+		response = await fetchImpl("/pokedex/lure", {
 			method: "POST",
 			credentials: "same-origin",
 			headers: { "Content-Type": "application/json", Accept: "application/json" },

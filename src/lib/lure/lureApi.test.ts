@@ -24,7 +24,7 @@ describe("fetchLureCapability", () => {
 			canPlace: true,
 			lureTypes: [501, 502]
 		});
-		expect(url).toBe("/lure/capability");
+		expect(url).toBe("/pokedex/lure/capability");
 	});
 
 	it("is 'no' when the shell is unreachable, errors or says no", async () => {
@@ -79,7 +79,7 @@ describe("placeLure", () => {
 			jobId: "job_0123456789abcdef",
 			duplicate: false
 		});
-		expect(seen!.url).toBe("/lure");
+		expect(seen!.url).toBe("/pokedex/lure");
 		expect(seen!.init.method).toBe("POST");
 		expect(JSON.parse(String(seen!.init.body))).toEqual(stop);
 	});
