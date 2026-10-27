@@ -11,10 +11,13 @@
 	import FortDetailsModal from "@/components/ui/popups/common/FortDetailsModal.svelte";
 	import { closeTopOverlay, reconcileOverlays } from "@/lib/ui/overlays.svelte";
 	import { syncUserSettings } from "@/lib/services/userSettings.svelte";
+	import { announceFrameReady } from "@/lib/lure/lureApi";
 
 	let { data, children } = $props();
 
-	onMount(() => load().then());
+	// A cross-origin frame has no readable document: the shell's loader waits
+	// for this announcement instead. No-op when the map is not framed.
+	onMount(() => load().then(() => announceFrameReady()));
 
 	watch(() => page.state, reconcileOverlays);
 </script>
