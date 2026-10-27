@@ -69,6 +69,13 @@ export function readShellLureResult(data: unknown): ShellLureResult | null {
 	};
 }
 
+/** The shell's question: "is the map up?" */
+function isShellHello(data: unknown): boolean {
+	if (typeof data !== "object" || data === null) return false;
+	const message = data as Record<string, unknown>;
+	return message.source === SHELL_SOURCE && message.type === "hello";
+}
+
 type Waiter = (result: ShellLureResult) => void;
 
 const waiters = new Map<string, Waiter>();
@@ -83,6 +90,11 @@ function listen(): void {
 	listening = true;
 	window.addEventListener("message", (event) => {
 		if (event.origin !== origin) return;
+		// The shell may have hydrated after this map booted, so it asks too;
+		// answering again costs one message and removes the race.
+		if (isShellHello(event.data)) {
+			window.parent.postMessage({ source: MAP_SOURCE, type: "ready" }, origin);
+		}
 		const capability = readShellCapability(event.data);
 		if (capability) {
 			cachedCapability = capability;
@@ -103,6 +115,14 @@ function listen(): void {
  * cross-origin frame has no readable document, so this message is the only
  * signal that the map booted rather than hung.
  */
+/**
+ * Starts listening before anything else: the shell's hello can arrive while the
+ * map is still loading its data, and that answer is what clears its loader.
+ */
+export function listenForShell(): void {
+	if (isCrossOriginEmbed()) listen();
+}
+
 export function announceFrameReady(): void {
 	if (!isCrossOriginEmbed()) return;
 	const origin = shellOrigin();
