@@ -32,6 +32,11 @@ EXPOSE 3900
 ENTRYPOINT ["./docker-entrypoint.sh"]
 
 FROM node:24-slim AS runtime
+# Provenance lives in the final stage so a new commit only invalidates this
+# layer, not the dependency and build caches.
+ARG GIT_REVISION=unknown
+LABEL org.opencontainers.image.revision=$GIT_REVISION \
+      org.opencontainers.image.source="https://github.com/rubendgpedrosa/diadem"
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
