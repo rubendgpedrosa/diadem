@@ -10,7 +10,10 @@ export default defineConfig({
 		paraglideVitePlugin({
 			project: "./project.inlang",
 			outdir: "./src/lib/paraglide",
-			strategy: ["localStorage", "preferredLanguage", "baseLocale"]
+			// Diadem is Portuguese-only: the custom strategy defined in
+			// src/lib/i18n/localeStrategy.ts always resolves "pt". baseLocale stays
+			// last so keys missing from pt keep falling back to English.
+			strategy: ["custom-pogoleiria", "baseLocale"]
 		}),
 		tailwindcss(),
 		sveltekit()

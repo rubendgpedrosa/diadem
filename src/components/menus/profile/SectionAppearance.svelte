@@ -1,11 +1,10 @@
 <script lang="ts">
 	import * as m from "@/lib/paraglide/messages";
-	import { Cloud, Moon, Paintbrush, Sun } from "@lucide/svelte";
+	import { Paintbrush } from "@lucide/svelte";
 	import { ExternalMapProvider, getUserSettings } from "@/lib/services/userSettings.svelte";
 	import { isMenuSidebar } from "@/lib/utils/device";
 	import { isNative } from "@/lib/native/runtime";
 	import {
-		AVAILABLE_LANGUAGES,
 		AVAILABLE_MAP_PROVIDERS,
 		onMapStyleChange,
 		onSettingsChange
@@ -19,34 +18,10 @@
 	import RadioGroup from "@/components/ui/input/selectgroup/RadioGroup.svelte";
 	import { MapLibre } from "svelte-maplibre";
 	import SelectGroupItem from "@/components/ui/input/selectgroup/SelectGroupItem.svelte";
-	import { mode } from "mode-watcher";
-	import { setThemeMode } from "@/lib/services/themeMode";
-	import { getLocale, setLocale } from "@/lib/paraglide/runtime";
 	import { getMapStyle } from "@/lib/utils/mapStyle";
 </script>
 
 <MenuCard title={m.settings_appearance()} Icon={Paintbrush}>
-	<MenuGeneric title={m.settings_theme()}>
-		<RadioGroup
-			value={mode.current}
-			onValueChange={setThemeMode as (value: string) => void}
-			class="self-center justify-center"
-		>
-			<SelectGroupItem class="p-4" value="light">
-				<Sun size="20" />
-				{m.theme_light()}
-			</SelectGroupItem>
-			<SelectGroupItem class="p-4" value="system">
-				<Cloud size="20" />
-				{m.theme_system()}
-			</SelectGroupItem>
-			<SelectGroupItem class="p-4" value="dark">
-				<Moon size="20" />
-				{m.theme_dark()}
-			</SelectGroupItem>
-		</RadioGroup>
-	</MenuGeneric>
-
 	<MenuGeneric title={m.settings_map_style()}>
 		<RadioGroup
 			value={getUserSettings().mapStyle.id}
@@ -100,14 +75,6 @@
 			options={AVAILABLE_MAP_PROVIDERS}
 		/>
 	{/if}
-
-	<Select
-		class="py-3 px-4 "
-		title={m.settings_language()}
-		value={getLocale()}
-		onselect={(locale) => setLocale(locale as Parameters<typeof setLocale>[0])}
-		options={AVAILABLE_LANGUAGES}
-	/>
 
 	{#if !isMenuSidebar()}
 		<Toggle

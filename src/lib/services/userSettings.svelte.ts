@@ -15,6 +15,7 @@ import { MapObjectType } from "@/lib/mapObjects/mapObjectTypes";
 import { getConfig } from "@/lib/services/config/config";
 import type { AnySearchEntry } from "@/lib/services/search.svelte";
 import { getDefaultMapStyle } from "@/lib/services/themeMode";
+import { resolveThemeMode, type ThemeMode } from "@/lib/utils/themeMode";
 import { getUserDetails } from "@/lib/services/user/userDetails.svelte.js";
 import { encodeRequestBody, getHeaders, parseResponse } from "@/lib/utils/requests";
 import { getDefaultGymFilter } from "@/lib/utils/gymUtils";
@@ -71,7 +72,7 @@ export type UserSettings = {
 		tappable: UiconSetUS;
 	};
 	isLeftHanded: boolean;
-	themeMode: "dark" | "light" | "system";
+	themeMode: ThemeMode;
 	loadMapObjectsWhileMoving: boolean;
 	loadMapObjectsPadding: number;
 	showDebugMenu: boolean;
@@ -114,7 +115,8 @@ function defaultActionState(): ActionState {
 
 export function getDefaultUserSettings(): UserSettings {
 	const general = getConfig().general;
-	const defaultMapStyle = getConfig().mapStyles.find((style) => style.id === "voyager") ?? getDefaultMapStyle("dark");
+	const defaultMapStyle =
+		getConfig().mapStyles.find((style) => style.id === "voyager") ?? getDefaultMapStyle();
 
 	return {
 		mapPosition: {
@@ -340,6 +342,9 @@ function migrateUserSettings(settings: LegacyUserSettings): UserSettings {
 		}
 		delete settings.expandedMapObjects;
 	}
+
+	// Diadem is dark-only: old settings keep parsing, but never light the UI.
+	settings.themeMode = resolveThemeMode(settings.themeMode);
 
 	return settings as UserSettings;
 }
