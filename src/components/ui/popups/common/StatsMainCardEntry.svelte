@@ -31,7 +31,10 @@
 	{#if typeof value === "function"}
 		{@render value()}
 	{:else}
-		<span>
+		<span
+			class:font-display={typeof value === "number"}
+			class:tabular-nums={typeof value === "number"}
+		>
 			{value}
 		</span>
 	{/if}

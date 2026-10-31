@@ -595,6 +595,7 @@
 
 {#snippet coloredIvs(iv: number, decimals: number)}
 	<span
+		class="font-display tabular-nums"
 		class:text-tier-0={iv <= 50}
 		class:text-tier-1={iv > 50 && iv <= 75}
 		class:text-tier-2={iv > 75 && iv < 90}

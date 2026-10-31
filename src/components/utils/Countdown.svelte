@@ -27,4 +27,4 @@
 	});
 </script>
 
-{time}
+<span class="font-display tabular-nums">{time}</span>
