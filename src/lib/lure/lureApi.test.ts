@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { fetchLureCapability, LURE_TYPES, placeLure } from "@/lib/lure/lureApi";
+import { fetchLureCapability, fetchLureStatus, LURE_TYPES, placeLure } from "@/lib/lure/lureApi";
 
 const responding = (status: number, body: unknown): typeof fetch => {
 	return (async () =>
@@ -117,6 +117,49 @@ describe("placeLure", () => {
 		await expect(placeLure(stop, unreachable)).resolves.toEqual({
 			ok: false,
 			error: "unreachable"
+		});
+	});
+});
+
+describe("fetchLureStatus", () => {
+	const jobId = "job_0123456789abcdef";
+
+	it("reads the job the shell knows", async () => {
+		let url = "";
+		const fetchImpl = (async (input: string) => {
+			url = input;
+			return new Response(JSON.stringify({ jobId, state: "done", verified: false }), {
+				status: 200
+			});
+		}) as unknown as typeof fetch;
+
+		await expect(fetchLureStatus(jobId, fetchImpl)).resolves.toEqual({
+			ok: true,
+			state: "done",
+			failReason: undefined,
+			verified: false
+		});
+		expect(url).toBe(`/pokedex/lure/${jobId}`);
+	});
+
+	it("passes on why the queue gave up", async () => {
+		await expect(
+			fetchLureStatus(jobId, responding(200, { jobId, state: "failed", failReason: "no_item" }))
+		).resolves.toEqual({
+			ok: true,
+			state: "failed",
+			failReason: "no_item",
+			verified: undefined
+		});
+	});
+
+	it("reports a refusal instead of inventing a state", async () => {
+		await expect(
+			fetchLureStatus(jobId, responding(403, { error: "not_a_moderator" }))
+		).resolves.toEqual({ ok: false, error: "not_a_moderator" });
+		await expect(fetchLureStatus(jobId, responding(200, { jobId }))).resolves.toEqual({
+			ok: false,
+			error: "failed"
 		});
 	});
 });

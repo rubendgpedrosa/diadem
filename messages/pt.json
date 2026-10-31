@@ -218,7 +218,19 @@
 	"yesterday_time_lower": "ontem, {time}",
 	"today_time_lower": "hoje, {time}",
 	"tomorrow_time_lower": "amanhã, {time}",
-	"lure_place": "Colocar módulo isca",
-	"lure_place_done": "Módulo isca na fila",
-	"lure_place_failed": "Não foi possível colocar o módulo isca ({code})"
+	"lure_place": "Colocar Lure Module",
+	"lure_place_done": "Lure Module na fila",
+	"lure_place_failed": "Não foi possível colocar o Lure Module ({code})",
+	"lure_place_duplicate": "Esse Lure Module já está na fila",
+	"lure_place_placed": "{item} colocado",
+	"lure_place_cancelled": "Lure Module cancelado",
+	"lure_place_pending": "O Lure Module ainda está pendente, confirma o Pokéstop mais tarde",
+	"lure_fail_no_item": "Não há Lure Module desse tipo na mochila",
+	"lure_fail_too_far": "O telemóvel está demasiado longe do Pokéstop",
+	"lure_fail_no_position": "O telemóvel ainda não tem posição",
+	"lure_fail_not_a_moderator": "Só os moderadores podem colocar um Lure Module",
+	"lure_fail_signed_out": "Inicia sessão na Pokédex primeiro",
+	"lure_fail_rate_limited": "Demasiados Lure Modules, espera um pouco",
+	"lure_fail_unavailable": "A fila de Lure Modules não está disponível",
+	"lure_fail_unreachable": "Não foi possível contactar o servidor"
 }

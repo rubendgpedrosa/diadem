@@ -4,6 +4,7 @@ import {
 	isCrossOriginEmbed,
 	readShellCapability,
 	readShellLureResult,
+	readShellLureStatus,
 	shellOrigin
 } from "@/lib/lure/lureApi";
 
@@ -73,12 +74,119 @@ describe("readShellLureResult", () => {
 		).toEqual({ requestId: "r-1", ok: false, jobId: undefined, error: "not_a_moderator" });
 	});
 
+	it("forwards a repeat as a repeat, so the map does not queue it again", () => {
+		expect(
+			readShellLureResult({
+				source: "polisnatch-shell",
+				type: "lure-result",
+				requestId: "r-1",
+				ok: true,
+				jobId: "job_0123456789abcdef",
+				duplicate: true
+			})
+		).toEqual({
+			requestId: "r-1",
+			ok: true,
+			jobId: "job_0123456789abcdef",
+			error: undefined,
+			duplicate: true
+		});
+	});
+
 	it("needs a request id, so a result cannot resolve the wrong request", () => {
 		expect(
 			readShellLureResult({ source: "polisnatch-shell", type: "lure-result", ok: true })
 		).toBeNull();
 		expect(
 			readShellLureResult({ source: "polisnatch-shell", type: "lure-capability", canPlace: true })
+		).toBeNull();
+	});
+});
+
+describe("readShellLureStatus", () => {
+	it("reads the shell's answer about a job", () => {
+		expect(
+			readShellLureStatus({
+				source: "polisnatch-shell",
+				type: "lure-status-result",
+				requestId: "s-1",
+				ok: true,
+				state: "running"
+			})
+		).toEqual({
+			requestId: "s-1",
+			ok: true,
+			state: "running",
+			failReason: undefined,
+			verified: undefined
+		});
+	});
+
+	it("reads why a job failed", () => {
+		expect(
+			readShellLureStatus({
+				source: "polisnatch-shell",
+				type: "lure-status-result",
+				requestId: "s-1",
+				ok: true,
+				state: "failed",
+				failReason: "no_item"
+			})
+		).toEqual({
+			requestId: "s-1",
+			ok: true,
+			state: "failed",
+			failReason: "no_item",
+			verified: undefined
+		});
+	});
+
+	it("does not call a missing state a success", () => {
+		expect(
+			readShellLureStatus({
+				source: "polisnatch-shell",
+				type: "lure-status-result",
+				requestId: "s-1",
+				ok: true
+			})
+		).toEqual({ requestId: "s-1", ok: false, error: "failed" });
+		expect(
+			readShellLureStatus({
+				source: "polisnatch-shell",
+				type: "lure-status-result",
+				requestId: "s-1",
+				ok: false,
+				error: "unknown_job"
+			})
+		).toEqual({ requestId: "s-1", ok: false, error: "unknown_job" });
+	});
+
+	it("needs a request id and its own message type", () => {
+		expect(
+			readShellLureStatus({
+				source: "polisnatch-shell",
+				type: "lure-status-result",
+				ok: true,
+				state: "done"
+			})
+		).toBeNull();
+		expect(
+			readShellLureStatus({
+				source: "polisnatch-shell",
+				type: "lure-result",
+				requestId: "s-1",
+				ok: true,
+				state: "done"
+			})
+		).toBeNull();
+		expect(
+			readShellLureStatus({
+				source: "polisnatch-map",
+				type: "lure-status-result",
+				requestId: "s-1",
+				ok: true,
+				state: "done"
+			})
 		).toBeNull();
 	});
 });
