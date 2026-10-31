@@ -44,6 +44,12 @@ importers:
       '@capacitor/status-bar':
         specifier: ^7
         version: 7.0.6(@capacitor/core@7.6.7)
+      '@fontsource-variable/bricolage-grotesque':
+        specifier: ^5.3.0
+        version: 5.3.0
+      '@fontsource-variable/figtree':
+        specifier: ^5.3.0
+        version: 5.3.0
       '@fragaria/address-formatter':
         specifier: ^7.0.0
         version: 7.0.0
@@ -883,6 +889,12 @@ packages:
 
   '@floating-ui/utils@0.2.11':
     resolution: {integrity: sha512-RiB/yIh78pcIxl6lLMG0CgBXAZ2Y0eVHqMPYugu+9U0AeT6YBeiJpf7lbdJNIugFP5SIjwNRgo4DhR1Qxi26Gg==}
+
+  '@fontsource-variable/bricolage-grotesque@5.3.0':
+    resolution: {integrity: sha512-TLi9Q4hJjS2UvoTMRSS2nHu6c4R56lAw60NR9QYtVRCHn0XtsFpiEhNffZ8Glsoxu6wEEwLKBP8lb94J52PNBA==}
+
+  '@fontsource-variable/figtree@5.3.0':
+    resolution: {integrity: sha512-VRVodD7OiG7apQwE8/2fMjaqpY/a0qRJqL5HtYj8CKIVps+9amaFcdfKmDIf7iqYQx6iPLlArVXAfKeIZmVcNQ==}
 
   '@fragaria/address-formatter@7.0.0':
     resolution: {integrity: sha512-PKYuE37M3qBnpRkg4lhZ6fmf6o7lM+9R3pqI+/71TlFTqxcREnX0mA7kQT2j55OTKYZDURn8RQoAvQqb+ffhGw==}
@@ -4301,6 +4313,10 @@ snapshots:
       '@floating-ui/utils': 0.2.11
 
   '@floating-ui/utils@0.2.11': {}
+
+  '@fontsource-variable/bricolage-grotesque@5.3.0': {}
+
+  '@fontsource-variable/figtree@5.3.0': {}
 
   '@fragaria/address-formatter@7.0.0':
     dependencies:

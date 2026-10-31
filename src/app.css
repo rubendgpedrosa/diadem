@@ -1,5 +1,9 @@
 @import "./custom.css";
 
+/* The suite faces, self-hosted (see @theme below). */
+@import "@fontsource-variable/figtree";
+@import "@fontsource-variable/bricolage-grotesque";
+
 @import "tailwindcss";
 @import "tw-animate-css";
 

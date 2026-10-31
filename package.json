@@ -63,6 +63,8 @@
 		"@capacitor/preferences": "^7",
 		"@capacitor/share": "^7",
 		"@capacitor/status-bar": "^7",
+		"@fontsource-variable/bricolage-grotesque": "^5.3.0",
+		"@fontsource-variable/figtree": "^5.3.0",
 		"@fragaria/address-formatter": "^7.0.0",
 		"@grpc/grpc-js": "^1.14.4",
 		"@isaacs/ttlcache": "^2.1.5",
