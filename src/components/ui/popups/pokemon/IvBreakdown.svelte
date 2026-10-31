@@ -26,7 +26,7 @@
 				style="transform: translateX(-{100 - (value / 15) * 100}%)"
 			></div>
 		</Meter.Root>
-		<p class="w-8 text-right">
+		<p class="font-display tabular-nums w-8 text-right">
 			{value}
 		</p>
 	</div>

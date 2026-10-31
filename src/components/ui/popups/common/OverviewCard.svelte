@@ -28,7 +28,11 @@
 	{/if}
 
 	{#if value}
-		<p class="font-semibold text-xl">
+		<p
+			class="font-semibold text-xl"
+			class:font-display={typeof value === "number"}
+			class:tabular-nums={typeof value === "number"}
+		>
 			{#if typeof value === "function"}
 				{@render value()}
 			{:else}
