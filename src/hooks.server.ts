@@ -15,6 +15,7 @@ import { PERMISSION_UPDATE_INTERVAL } from "@/lib/constants";
 import type { Perms } from "@/lib/utils/features";
 import { locales, serverAsyncLocalStorage } from "@/lib/paraglide/runtime";
 import { paraglideMiddleware } from "@/lib/paraglide/server";
+import { htmlLang } from "@/lib/i18n/htmlLang";
 import { registerServerLocaleStrategy } from "@/lib/i18n/localeStrategy";
 import { sequence } from "@sveltejs/kit/hooks";
 import { setServerLoggerFactory } from "@/lib/utils/logger";
@@ -44,7 +45,7 @@ const paraglideHandle: Handle = ({ event, resolve }) =>
 		const effectiveLocale = isValidLang ? langParam! : locale;
 
 		return resolve(event, {
-			transformPageChunk: ({ html }) => html.replace("%lang%", effectiveLocale)
+			transformPageChunk: ({ html }) => html.replace("%lang%", htmlLang(effectiveLocale))
 		});
 	});
 
