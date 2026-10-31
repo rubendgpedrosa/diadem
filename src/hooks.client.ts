@@ -6,10 +6,19 @@ import { installNativeUi } from "@/lib/native/nativeUi";
 import { loadStoredToken } from "@/lib/native/auth";
 import { isNative, loadInstanceUrl } from "@/lib/native/runtime";
 import { installDeepLinks } from "@/lib/native/deepLinks";
+import { shouldRedirectToHub } from "@/lib/pogoleiria/hubRedirect";
 
 maplibregl.setWorkerUrl(workerUrl);
 
 export const init: ClientInit = async () => {
+	if (!isNative()) {
+		const target = shouldRedirectToHub(window);
+		if (target) {
+			window.location.replace(target);
+			return;
+		}
+	}
+
 	// native setup hooks, runs on initial load
 	if (isNative()) {
 		await loadInstanceUrl();

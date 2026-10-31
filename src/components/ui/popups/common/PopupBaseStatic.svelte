@@ -26,7 +26,9 @@
 	import { Copy, Navigation, Share2, X } from "@lucide/svelte";
 	import { getRootOrigin } from "$lib/native/runtime";
 	import { closePopup, getCurrentPath } from "$lib/mapObjects/interact";
+	import { ClientMapObjectType } from "$lib/mapObjects/mapObjectTypes";
 	import { getLocale } from "$lib/paraglide/runtime";
+	import { hubObjectUrl, hubPositionUrl } from "$lib/pogoleiria/hubLinks";
 	import { getMapsUrl } from "$lib/utils/mapUrl";
 	import { Coords } from "$lib/utils/coordinates";
 	import { getShareTitle } from "$lib/features/shareTexts";
@@ -47,6 +49,14 @@
 	useMetadata(() => ({ title: props ? props.title : undefined }));
 
 	function getShareUrl() {
+		if (data) {
+			const hubUrl =
+				data.type === ClientMapObjectType.LOCATION
+					? hubPositionUrl(data.lat, data.lon, data.zoom)
+					: hubObjectUrl(data.type, data.id);
+			if (hubUrl) return hubUrl;
+		}
+
 		const path = getCurrentPath({ data });
 		return getRootOrigin() + path + (path.includes("?") ? "&" : "?") + "lang=" + getLocale();
 	}
