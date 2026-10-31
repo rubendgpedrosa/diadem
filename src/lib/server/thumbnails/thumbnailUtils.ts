@@ -69,7 +69,7 @@ export async function fetchStaticMapBase64(
 		return null;
 	}
 
-	const style = staticMap.style || getDefaultMapStyle("light").id;
+	const style = staticMap.style || getDefaultMapStyle().id;
 
 	const iconType: UiconSetModifierType =
 		options.data.type === MapObjectType.NEST ? MapObjectType.POKEMON : options.data.type;

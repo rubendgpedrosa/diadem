@@ -8,21 +8,10 @@
 			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
 		/>
 		<script>
-			// Pick the persisted theme before render so the initial loading screen
-			// (shown between the splash and the app) isn't a white flash in dark mode.
-			(function () {
-				try {
-					var s = JSON.parse(localStorage.getItem("userSettings") || "{}");
-					var mode = (s && s.themeMode) || "dark";
-					var dark =
-						mode === "dark" ||
-						((!mode || mode === "system") &&
-							window.matchMedia("(prefers-color-scheme: dark)").matches);
-					// Add the real `.dark` class so themed CSS vars apply immediately,
-					// including on error/unreachable screens that render before mode-watcher.
-					if (dark) document.documentElement.classList.add("dark");
-				} catch (e) {}
-			})();
+			// Diadem is dark only: add the dark class before render so the initial
+			// loading screen never flashes light. The stored themeMode setting is
+			// ignored on purpose.
+			document.documentElement.classList.add("dark");
 
 			(function () {
 				try {

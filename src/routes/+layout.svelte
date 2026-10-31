@@ -1,6 +1,5 @@
 <script lang="ts">
 	import "../app.css";
-	import { getUserSettings } from "@/lib/services/userSettings.svelte";
 	import { ModeWatcher, setMode } from "mode-watcher";
 	import Metadata from "@/components/utils/Metadata.svelte";
 	import StatusScreen from "@/components/ui/StatusScreen.svelte";
@@ -16,7 +15,7 @@
 	onMount(() => {
         document.getElementById("initial-loader")?.remove();
         if (!data?.needsInstanceGate && !data?.configError) {
-            setMode(getUserSettings().themeMode ?? "dark");
+            setMode("dark");
         }
     });
 </script>
@@ -37,6 +36,6 @@
 {:else}
 	<Metadata />
 
-	<ModeWatcher defaultMode={getUserSettings().themeMode} track={false} />
+	<ModeWatcher defaultMode="dark" track={false} />
 	{@render children()}
 {/if}
