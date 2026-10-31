@@ -15,6 +15,7 @@ import { PERMISSION_UPDATE_INTERVAL } from "@/lib/constants";
 import type { Perms } from "@/lib/utils/features";
 import { locales, serverAsyncLocalStorage } from "@/lib/paraglide/runtime";
 import { paraglideMiddleware } from "@/lib/paraglide/server";
+import { registerServerLocaleStrategy } from "@/lib/i18n/localeStrategy";
 import { sequence } from "@sveltejs/kit/hooks";
 import { setServerLoggerFactory } from "@/lib/utils/logger";
 import { getServerLogger } from "@/lib/server/logging";
@@ -23,6 +24,9 @@ import { setConfig } from "@/lib/services/config/config";
 import { getDisallowedPaths } from "@/lib/utils/disallowedPaths";
 
 process.title = "Diadem";
+
+// Diadem is Portuguese-only; register before paraglideMiddleware resolves anything.
+registerServerLocaleStrategy();
 
 const paraglideHandle: Handle = ({ event, resolve }) =>
 	paraglideMiddleware(event.request, ({ request: localizedRequest, locale }) => {
