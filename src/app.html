@@ -48,8 +48,8 @@
 				display: flex;
 				align-items: center;
 				justify-content: center;
-                flex-direction: column;
-                gap: 16px;
+				flex-direction: column;
+				gap: 16px;
 				background: inherit;
 			}
 
@@ -63,8 +63,21 @@
 			html.native-app #initial-loader img {
 				display: block;
 			}
-		#initial-loader::after { content: "PoGoLeiria"; color: oklch(0.52 0.17 28); font: 700 20px/1.4 system-ui, sans-serif; letter-spacing: -0.035em; }
-        </style>
+			/* The splash wordmark, defined once and here: the suite's, uppercase
+			 * and 900 like the hub's page header. Set in Figtree once it has
+			 * loaded; system-ui otherwise, which is fine on a screen shown for
+			 * under a second. */
+			#initial-loader::after {
+				content: "POGOLEIRIA";
+				color: var(--foreground, #f5f5f5);
+				font-family: "Figtree Variable", system-ui, sans-serif;
+				font-size: 22px;
+				font-weight: 900;
+				line-height: 1.2;
+				letter-spacing: -0.055em;
+				text-transform: uppercase;
+			}
+		</style>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
