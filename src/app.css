@@ -14,6 +14,17 @@
 	--spacing-safe-inset-bottom: calc(0.5rem + env(safe-area-inset-bottom));
 }
 
+@theme {
+	/* The suite's two faces (Holofote): Figtree for reading, Bricolage
+	 * Grotesque for figures, so a CP is set in the same face as a hub figure.
+	 * Self-hosted, never fetched from Google: the map must not call a third
+	 * party for its own chrome. Pair every figure with `tabular-nums`, so a
+	 * countdown does not reflow as its digits change; where a family is not
+	 * available the stack falls back to system-ui, as the map drew before. */
+	--font-sans: "Figtree Variable", system-ui, sans-serif;
+	--font-display: "Bricolage Grotesque Variable", system-ui, sans-serif;
+}
+
 :root {
 	--background: oklch(1 0 0);
 	--foreground: oklch(0.145 0 0);
@@ -21,21 +32,21 @@
 	--card-foreground: oklch(0.145 0 0);
 	--popover: oklch(1 0 0);
 	--popover-foreground: oklch(0.145 0 0);
-	--primary: oklch(0.205 0 0);
-	--primary-foreground: oklch(0.985 0 0);
+	--primary: oklch(0.52 0.17 28); /* brand-600, ember */
+	--primary-foreground: oklch(0.97 0.01 258); /* tone-100 */
 	--secondary: oklch(0.97 0 0);
 	--secondary-foreground: oklch(0.205 0 0);
 	--muted: oklch(0.97 0 0);
 	--muted-foreground: oklch(0.556 0 0);
-	--accent: oklch(0.98 0 0);
-	--accent-foreground: oklch(0.205 0 0);
-	--accent-highlight: oklch(0.95 0 0);
+	--accent: oklch(0.95 0.035 88); /* signal, pale gold */
+	--accent-foreground: oklch(0.24 0.026 258); /* tone-850 */
+	--accent-highlight: oklch(0.9 0.06 88); /* signal, one step brighter */
 	--destructive: oklch(0.577 0.245 27.325);
 	--destructive-foreground: oklch(0.577 0.245 27.325);
 	--border: oklch(0.922 0 0);
 	--input: oklch(0.922 0 0);
-	--ring: oklch(0.708 0 0);
-	--radius: 0.5rem;
+	--ring: oklch(0.66 0.16 30); /* brand-400, ember-bright */
+	--radius: 1rem;
 	--red: var(--color-rose-300);
 	--green: var(--color-green-500);
 	--tier-0: var(--color-rose-700);
@@ -77,14 +88,19 @@
 }
 
 /*
- * The PoGo Leiria palette.
+ * The PoGo Leiria palette, in one place.
  *
- * Was stock shadcn neutral: zero chroma, and --primary was white, so the map
- * carried no brand colour while the shell around it did. These are the suite's
- * tokens, resolved from packages/ui/src/tokens.css and named in the comments,
- * since this app can't import them.
+ * This block and the light `:root` above are the only palette in the app. The
+ * values were stock shadcn neutral (zero chroma, white --primary) until the
+ * suite's tokens, resolved from packages/ui/src/tokens.css and named in the
+ * comments, came here; the production config carried a second copy that
+ * already disagreed with this file, and a palette that lives twice drifts.
  *
- * Local patch. Original: branding-backup/app.css.before-palette
+ * Dark mode keeps the config's gold --accent-foreground: the two copies
+ * disagreed (tone-100 here, gold there) and the config is the copy users
+ * actually saw, because it loaded as `:root.dark`.
+ *
+ * config/custom.css must now carry layout only — no colour, no radius.
  */
 .dark {
 	--background: oklch(0.105 0.022 258); /* tone-950 */
@@ -100,7 +116,7 @@
 	--muted: oklch(0.235 0.026 258); /* tone-850 */
 	--muted-foreground: oklch(0.755 0.022 258); /* tone-300, ink-muted */
 	--accent: oklch(0.235 0.026 258); /* tone-850 */
-	--accent-foreground: oklch(0.97 0.01 258); /* tone-100 */
+	--accent-foreground: oklch(0.86 0.13 88); /* signal-300, gold */
 	--accent-highlight: oklch(0.3 0.026 258); /* tone-800 */
 	--destructive: oklch(0.62 0.2 28); /* danger-500 */
 	--destructive-foreground: oklch(0.637 0.237 25.331);
@@ -138,10 +154,16 @@
 	--color-border: var(--border);
 	--color-input: var(--input);
 	--color-ring: var(--ring);
-	--radius-sm: calc(var(--radius) - 4px);
-	--radius-md: calc(var(--radius) - 2px);
-	--radius-lg: var(--radius);
-	--radius-xl: calc(var(--radius) + 4px);
+	/* Radius. The suite declares every step instead of deriving them: the calc
+	 * chain left `--radius-2xl` undefined, so `rounded-2xl` fell through to
+	 * Tailwind's 16px and landed *below* `rounded-xl` — cards less round than
+	 * the controls inside them. Controls sit one step tighter than the
+	 * surface holding them (16px cards, 20–24px for popovers and drawers). */
+	--radius-sm: 8px;
+	--radius-md: 12px;
+	--radius-lg: 16px;
+	--radius-xl: 20px;
+	--radius-2xl: 24px;
 	--color-red: var(--red);
 	--color-green: var(--green);
 	--color-tier-0: var(--tier-0);
