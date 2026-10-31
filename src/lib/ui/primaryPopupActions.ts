@@ -38,6 +38,8 @@ import { openToast } from "@/lib/ui/toasts.svelte.js";
 import { mItem } from "@/lib/services/ingameLocale";
 import { getLureAccess } from "@/lib/lure/lureAccess.svelte";
 import { placeLure } from "@/lib/lure/lureApi";
+import { lureErrorMessage } from "@/lib/lure/lureMessages";
+import { waitForLure } from "@/lib/lure/waitForLure";
 import type { PokestopData } from "@/lib/types/mapObjectData/pokestop";
 
 export type PrimaryPopupAction = QuickAction & { popupAction?: PopupAction };
@@ -139,7 +141,11 @@ export function getPrimaryPopupActions(
 	return actions;
 }
 
-/** One job per lure; a repeat is reported as a repeat, never queued again here. */
+/**
+ * One job per lure; a repeat is reported as a repeat, never queued again here.
+ * A moderator who asked for a lure is told what became of it, so a job the
+ * account could not run ("no_item") is not left looking queued.
+ */
 async function placeLureAt(stop: PokestopData, lureType: number): Promise<void> {
 	const result = await placeLure({
 		pokestopId: stop.id,
@@ -147,5 +153,23 @@ async function placeLureAt(stop: PokestopData, lureType: number): Promise<void> 
 		lon: stop.lon,
 		lureType
 	});
-	openToast(result.ok ? m.lure_place_done() : m.lure_place_failed({ code: result.error }));
+	if (!result.ok) {
+		openToast(lureErrorMessage(result.error), 4000);
+		return;
+	}
+	if (result.duplicate) {
+		openToast(m.lure_place_duplicate(), 4000);
+		return;
+	}
+	openToast(m.lure_place_done(), 4000);
+	const outcome = await waitForLure(result.jobId);
+	if (outcome.state === "done") {
+		openToast(m.lure_place_placed({ item: mItem(lureType) }), 4000);
+	} else if (outcome.state === "failed") {
+		openToast(lureErrorMessage(outcome.failReason), 4000);
+	} else if (outcome.state === "cancelled") {
+		openToast(m.lure_place_cancelled(), 4000);
+	} else {
+		openToast(m.lure_place_pending(), 4000);
+	}
 }
