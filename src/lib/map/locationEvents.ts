@@ -11,6 +11,7 @@ import {
 	hasClipboardWrite
 } from "@/lib/utils/device";
 import { getRootOrigin } from "@/lib/native/runtime";
+import { hubObjectUrl } from "@/lib/pogoleiria/hubLinks";
 import { m } from "@/lib/paraglide/messages";
 import { getLocale } from "@/lib/paraglide/runtime";
 import { Copy, Link, Share2 } from "@lucide/svelte";
@@ -66,9 +67,9 @@ export function onLocationContext(event: MapTouchEvent | MapMouseEvent) {
 			title: getPopupProps(data)?.title ?? "",
 			getActions: () => {
 				const actions = getPrimaryPopupActions(data, actionCoords.lat, actionCoords.lon);
-				const path = getCurrentPath({ data });
-				const url = new URL(getRootOrigin() + path);
-				url.searchParams.set("lang", getLocale());
+				const hubUrl = hubObjectUrl(data.type, data.id);
+				const url = new URL(hubUrl ?? getRootOrigin() + getCurrentPath({ data }));
+				if (!hubUrl) url.searchParams.set("lang", getLocale());
 				const shareUrl = url.toString();
 				if (canNativeShare({ url: shareUrl })) {
 					actions.push({

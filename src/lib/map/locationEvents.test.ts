@@ -112,10 +112,7 @@ describe("map context actions", () => {
 		expect(actions.at(-2)?.Icon).toBe(Link);
 		expect(actions.at(-1)?.Icon).toBe(Copy);
 		actions.at(-2)?.onclick?.();
-		expect(state.path).toHaveBeenCalledExactlyOnceWith({ data: marker });
-		expect(state.copy).toHaveBeenCalledExactlyOnceWith(
-			"https://map.example/pokemon/target?lang=en"
-		);
+		expect(state.copy).toHaveBeenCalledExactlyOnceWith("https://pogoleiria.pt/mapa/pokemon/target");
 		expect(state.share).not.toHaveBeenCalled();
 	});
 	it("prefers native sharing and keeps Copy coordinates last", () => {
@@ -129,9 +126,9 @@ describe("map context actions", () => {
 			"Copy coordinates"
 		]);
 		expect(actions.at(-1)?.Icon).toBe(Copy);
-		expect(state.canShare).toHaveBeenCalledWith({ url: "https://map.example/gym/target?lang=en" });
+		expect(state.canShare).toHaveBeenCalledWith({ url: "https://pogoleiria.pt/mapa/gym/target" });
 		actions.at(-2)?.onclick?.();
-		expect(state.share).toHaveBeenCalledExactlyOnceWith("https://map.example/gym/target?lang=en");
+		expect(state.share).toHaveBeenCalledExactlyOnceWith("https://pogoleiria.pt/mapa/gym/target");
 		expect(state.copy).not.toHaveBeenCalled();
 	});
 	it.each([
@@ -152,17 +149,25 @@ describe("map context actions", () => {
 		actions.at(-1)?.onclick?.();
 		expect(state.copy).toHaveBeenCalledExactlyOnceWith("12.345679, 98.765432");
 	});
-	it("shares the nest marker using its permalink, instance origin and locale", () => {
+	it("shares the nest marker through the hub", () => {
 		const nest = { id: "target", type: MapObjectType.NEST, lat: 12, lon: 98 };
 		state.hit.mockReturnValue(nest);
+		onLocationContext(event("contextmenu"));
+		const actions: QuickAction[] = state.open.mock.calls[0][0].getActions();
+		actions.at(-2)?.onclick?.();
+		expect(state.copy).toHaveBeenCalledExactlyOnceWith("https://pogoleiria.pt/mapa/nest/target");
+	});
+	it("shares a marker the hub cannot link using the instance origin and locale", () => {
+		const spawnpoint = { id: "target", type: MapObjectType.SPAWNPOINT, lat: 12, lon: 98 };
+		state.hit.mockReturnValue(spawnpoint);
 		state.origin = "https://native-map.example";
 		state.locale = "de";
 		onLocationContext(event("contextmenu"));
 		const actions: QuickAction[] = state.open.mock.calls[0][0].getActions();
 		actions.at(-2)?.onclick?.();
-		expect(state.path).toHaveBeenCalledExactlyOnceWith({ data: nest });
+		expect(state.path).toHaveBeenCalledExactlyOnceWith({ data: spawnpoint });
 		expect(state.copy).toHaveBeenCalledExactlyOnceWith(
-			"https://native-map.example/nest/target?lang=de"
+			"https://native-map.example/spawnpoint/target?lang=de"
 		);
 	});
 	it("does not offer unsupported clipboard actions", () => {
