@@ -15,29 +15,6 @@ import {
 	type UserSettings
 } from "@/lib/services/userSettings.svelte";
 
-export const AVAILABLE_LANGUAGES = [
-	{
-		label: m.language_english(),
-		value: "en"
-	},
-	{
-		label: m.language_german(),
-		value: "de"
-	},
-	{
-		label: m.language_spanish(),
-		value: "es"
-	},
-	{
-		label: m.language_portuguese(),
-		value: "pt"
-	},
-	{
-		label: m.language_polish(),
-		value: "pl"
-	}
-];
-
 export const AVAILABLE_MAP_PROVIDERS = [
 	{
 		label: m.google_maps(),
